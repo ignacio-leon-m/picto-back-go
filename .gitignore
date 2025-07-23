@@ -1,0 +1,30 @@
+# Archivos y directorios de compilación de Go
+/bin/         # Binarios ejecutables de Go compilados localmente (ej. ./backend si lo compilas fuera de Docker)
+/vendor/      # Directorio para dependencias vendoreadas (si usas 'go mod vendor')
+*.exe         # Ejecutables de Windows (ej. tu_app.exe)
+*.dll         # Librerías dinámicas de Windows
+*.so          # Librerías compartidas de Linux
+*.dylib       # Librerías dinámicas de macOS
+*.test        # Archivos de prueba compilados de Go
+*.out         # Archivos de salida de prueba de Go (generados por 'go test -c')
+
+# Archivos de entorno de desarrollo e IDEs
+.idea/        # Directorio de configuración de IntelliJ IDEA (aunque usas VS Code, es buena práctica si cambias de IDE)
+.vscode/      # Directorio de configuración de Visual Studio Code (ej. settings, extensions, launch configs)
+.DS_Store     # Archivos de metadatos de macOS (creados por Finder)
+.env          # Archivos de variables de entorno (¡CRÍTICO! NO deben subir secretos ni configuraciones locales)
+*.env         # Cualquier archivo que termine en .env (ej. .env.development, .env.production)
+
+# Archivos de log y temporales
+*.log         # Cualquier archivo que termine en .log
+tmp/          # Directorio para archivos temporales
+*.swp         # Archivos de intercambio de Vim
+*.swo         # Archivos de intercambio de Vim
+
+# Docker y archivos relacionados (aunque ya están en el contexto de la build, no deben versionarse si no es necesario)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Cachés de Go y otros cachés
+/go/pkg/mod/cache/ # Caché de módulos Go (gestionado por el volumen 'go-mod-cache' en Docker Compose)
