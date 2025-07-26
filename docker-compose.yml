@@ -1,57 +1,41 @@
-# Version del formato Docker Compose
-version: '3.8'
-
-# Sección para definir tus servicios (contenedores)
 services:
-  # --- Servicio de la Base de Datos PostgreSQL ---
-  db:
-    image: postgres:15-alpine # Imagen Docker base: PostgreSQL versión 15, usando la variante 'alpine' que es más ligera.
-    restart: always           # Política de reinicio: el contenedor se reiniciará automáticamente si falla o se detiene.
-    environment:              # Variables de entorno que se pasan al contenedor de PostgreSQL para su configuración.
-      POSTGRES_DB: pictograms_db    # Nombre de la base de datos que se creará automáticamente al iniciar.
-      POSTGRES_USER: user           # Nombre de usuario para acceder a la base de datos.
-      POSTGRES_PASSWORD: password   # Contraseña para el usuario de la base de datos.
-    ports:
-      - "5432:5432"           # Mapeo de puertos: "PUERTO_EN_TU_MAQUINA:PUERTO_EN_EL_CONTENEDOR".
-                              # Permite acceder a PostgreSQL desde tu máquina host en el puerto 5432.
-    volumes:
-      - db_data:/var/lib/postgresql/data # Volumen persistente: 'db_data' es un volumen con nombre definido abajo.
-                                         # Esto asegura que los datos de tu DB no se pierdan si el contenedor 'db' se detiene o se recrea.
-      # Opcional (pero útil para futuro): Para scripts de inicialización de la DB (ej. crear tablas, insertar datos de prueba)
-      # - ./db/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
-
-  # --- Servicio del Backend Go ---
   backend:
-    build:                      # Indica que Docker debe construir la imagen para este servicio desde un Dockerfile.
-      context: .                # El contexto de construcción es el directorio actual (donde está docker-compose.yml).
-      dockerfile: Dockerfile    # Especifica que el Dockerfile a usar se llama 'Dockerfile' y está en el contexto.
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
     ports:
-      - "8080:8080"             # Mapeo de puertos: "PUERTO_EN_TU_MAQUINA:PUERTO_EN_EL_CONTENEDOR".
-                                # Tu aplicación Go escuchará en el puerto 8080 dentro del contenedor.
-                                # Esto te permitirá acceder a tu API desde el navegador en http://localhost:8080.
-    environment:                # Variables de entorno para el servicio del backend Go.
-      # URL de conexión a la base de datos.
-      # 'db' es el nombre del servicio de la DB en Docker Compose (resolución de DNS interna de Docker).
-      DATABASE_URL: "postgres://user:password@db:5432/pictograms_db?sslmode=disable"
-    depends_on:
-      - db                      # Asegura que el servicio 'db' (la base de datos) se inicie antes que 'backend'.
-                                # Esto previene errores de conexión al inicio.
+      # Map your local port 8080 to the container's port 8080
+      - "8080:8080"
     volumes:
-      - .:/app                  # Monta el directorio local de tu proyecto (el punto '.') en '/app' dentro del contenedor.
-                                # Esto es CRÍTICO para el desarrollo: cualquier cambio que hagas en tu código local
-                                # se reflejará instantáneamente dentro del contenedor, permitiendo el hot-reloading.
-      - go-mod-cache:/go/pkg/mod # Volumen para cachear módulos Go. Acelera las construcciones subsiguientes
-                                 # ya que las dependencias no se descargarán cada vez.
-    # Comando que se ejecuta al iniciar el contenedor en modo desarrollo.
-    # 1. `go mod tidy`: Limpia y sincroniza las dependencias del módulo Go.
-    # 2. `go install github.com/cosmtrek/air@latest`: Instala la herramienta 'air' para hot-reloading.
-    # 3. `air`: Inicia la aplicación Go con 'air', que detecta cambios en el código y reinicia la aplicación.
-    command: sh -c "go mod tidy && go install github.com/cosmtrek/air@latest && air"
-    # Para mantener el contenedor en ejecución y ver la salida de 'air' en los logs.
-    tty: true
+      # Mount your local source code into the container for live-reloading.
+      # The ':cached' flag improves performance on macOS and Windows.
+      - .:/app:cached
+      # Use a named volume to persist the Go module cache between builds.
+      - go-mod-cache:/go/pkg/mod
+    environment:
+      # Esta es la "Connection String" que nuestra aplicación Go usará para encontrar la base de datos.
+      # 'db' es el nombre del servicio de PostgreSQL que definimos abajo. Docker se encarga de la resolución de red.
+      - DATABASE_URL=postgres://postgres:vivigames77@db:5432/pictogramdb?sslmode=disable
+    # Hacemos que el backend dependa de la base de datos.
+    # Esto asegura que el contenedor de la 'db' se inicie antes que el del 'backend'.
+    depends_on:
+      - db
 
-# --- Definición de Volúmenes ---
-# Estos son volúmenes con nombre que Docker gestiona para la persistencia de datos y el caché.
+  db:
+    image: postgres:16-alpine # Usamos una imagen oficial y ligera de PostgreSQL.
+    ports:
+      # Mapeamos el puerto 5432 del contenedor al 5432 de tu máquina local.
+      # Esto te permitirá conectar herramientas de base de datos (como DBeaver o pgAdmin) directamente.
+      - "5432:5432"
+    volumes:
+      # Montamos un volumen nombrado para persistir los datos de PostgreSQL.
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=vivigames77
+      - POSTGRES_DB=pictogramdb
+
+# Define the named volume for the Go module cache.
 volumes:
-  db_data:        # Volumen para los datos de PostgreSQL. Se creará automáticamente.
-  go-mod-cache:   # Volumen para el caché de módulos Go. También se creará automáticamente.
+  go-mod-cache:
+  postgres-data: # Definimos el volumen para los datos de la base de datos.

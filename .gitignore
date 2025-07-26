@@ -21,10 +21,5 @@ tmp/          # Directorio para archivos temporales
 *.swp         # Archivos de intercambio de Vim
 *.swo         # Archivos de intercambio de Vim
 
-# Docker y archivos relacionados (aunque ya están en el contexto de la build, no deben versionarse si no es necesario)
-Dockerfile
-docker-compose.yml
-.dockerignore
-
 # Cachés de Go y otros cachés
 /go/pkg/mod/cache/ # Caché de módulos Go (gestionado por el volumen 'go-mod-cache' en Docker Compose)

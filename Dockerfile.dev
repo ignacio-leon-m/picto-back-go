@@ -1,0 +1,24 @@
+# Use the official Go image. The -alpine variant is lightweight.
+FROM golang:1.24-alpine
+
+# Set the Current Working Directory inside the container
+WORKDIR /app
+
+# Copy go.mod and go.sum files to leverage Docker's layer caching.
+# This step will only be re-run if these files change.
+COPY go.mod go.sum ./
+
+# Download all dependencies.
+RUN go mod download
+
+# Install the 'air' live-reloader from its new, correct path.
+RUN go install github.com/air-verse/air@latest
+
+# Copy the rest of your application's source code.
+COPY . .
+
+# Expose the port your app will run on.
+EXPOSE 8080
+
+# Set the default command to run 'air'. Air will watch for file changes and restart your app.
+CMD ["air"]

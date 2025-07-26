@@ -1,14 +1,11 @@
-.git             # Ignora el directorio de control de versiones de Git
-.idea/           # Ignora la carpeta de configuración de IntelliJ IDEA (aunque usas VS Code, es buena práctica)
-.vscode/         # Ignora la carpeta de configuración de Visual Studio Code
-vendor/          # Ignora el directorio de dependencias vendoreadas de Go (si lo usas, Docker las gestionará)
-*.env            # Ignora archivos de variables de entorno (pueden contener secretos)
-*.log            # Ignora archivos de log
-tmp/             # Ignora directorios temporales
-*.swp            # Ignora archivos de intercambio de Vim
-*.swo            # Ignora archivos de intercambio de Vim
-Dockerfile       # Ignora el propio Dockerfile (ya está en el contexto)
-docker-compose.yml # Ignora el docker-compose.yml (ya está en el contexto)
-README.md        # Ignora archivos de README
-.DS_Store        # Ignora archivos de metadatos de macOS
-bin/             # Ignora cualquier binario compilado localmente
+# Ignore version control directories
+.git
+
+# Ignore IDE and editor specific files
+.vscode/
+.idea/
+
+# Ignore local environment files and logs
+.env
+*.log
+tmp/
