@@ -1,10 +1,10 @@
-package main // Declara que este es un paquete ejecutable (el punto de entrada de la aplicación).
+package main
 
 import (
 	"context"
-	"fmt" // Para formateo de salida (ej. imprimir mensajes en consola)
-	"log" // Para registrar mensajes de error o información
-	"os"  // Para interactuar con el sistema operativo (ej. obtener variables de entorno)
+	"fmt" // Para formateo de salida en consola
+	"log" // registros
+	"os"  // ej. obtener variables de entorno
 	"time"
 
 	"pictogram-project/internal/database"

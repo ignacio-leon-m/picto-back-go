@@ -27,7 +27,7 @@ Hemos establecido una base sólida para el desarrollo, asegurando que el entorno
 
 ## ⬜ Fase 1: Integración de la Base de Datos y Cimientos de la API
 
-*Estado: **En Progreso***
+*Estado: **Completado***
 
 El objetivo de esta fase es conectar nuestra aplicación Go con una base de datos PostgreSQL, todo orquestado por Docker Compose. Esto nos permitirá persistir y consultar datos.
 
@@ -35,19 +35,20 @@ El objetivo de esta fase es conectar nuestra aplicación Go con una base de dato
 -   [x] **Añadir PostgreSQL a Docker Compose:** Actualizar `docker-compose.yml` para incluir un servicio de base de datos PostgreSQL.
 -   [x] **Persistencia de Datos:** Configurar un volumen de Docker para que los datos de PostgreSQL no se pierdan al reiniciar los contenedores.
 -   [x] **Conexión a la Base de Datos:** Escribir el código en Go para establecer y verificar una conexión con la base de datos PostgreSQL desde la aplicación Fiber.
--   [ ] **Estructura del Modelo:** Definir el `struct` de Go que representará un `Pictogram` en nuestro código.
+-   [x] **Estructura del Modelo:** Definir el `struct` de Go que representará un `Pictogram` en nuestro código.
 -   [x] **Endpoint de "Health Check":** Crear una nueva ruta en la API (ej. `/health`) que verifique el estado de la conexión a la base de datos y devuelva un `OK`.
 
 ---
 
 ## ⬜ Fase 2: API Core - Gestión de Pictogramas (CRUD)
 
-*Estado: **Pendiente***
+*Estado: **En Progreso***
 
 Con la base de datos conectada, construiremos los endpoints fundamentales para gestionar los pictogramas.
 
 ### Tareas:
--   [ ] **Patrón Repositorio:** Implementar el patrón de diseño "Repository" para abstraer la lógica de acceso a datos.
+-   [x] **Crear Esquema de Base de Datos:** Usar migraciones para crear la tabla `pictograms` en PostgreSQL.
+-   [ ] **Implementar Patrón Repositorio:** Crear una capa de abstracción para las consultas a la base de datos.
 -   [ ] **Crear Pictograma:** Implementar el endpoint `POST /pictograms`.
 -   [ ] **Obtener un Pictograma:** Implementar el endpoint `GET /pictograms/:id`.
 -   [ ] **Listar Pictogramas:** Implementar el endpoint `GET /pictograms`.
